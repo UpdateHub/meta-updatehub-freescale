@@ -1,0 +1,7 @@
+part SPL --source rawcopy --sourceparams="file=SPL" --ondisk mmcblk --no-table --align 1
+part u-boot --source rawcopy --sourceparams="file=u-boot.img" --ondisk mmcblk --no-table --align 69
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label system  --align 8192 --extra-space 200
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label system  --align 8192 --extra-space 200
+part /data --ondisk mmcblk --fstype=ext4 --label data --size 16M --align 8192 --extra-space 0
+
+bootloader --ptable msdos
