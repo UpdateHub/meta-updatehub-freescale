@@ -1,0 +1,91 @@
+From f2056ea1343ab38387c7256f60175b86d548e20c Mon Sep 17 00:00:00 2001
+From: Otavio Salvador <otavio@ossystems.com.br>
+Date: Wed, 14 Jun 2017 12:21:16 -0300
+Subject: [PATCH 1/3] UpdateHub: Add common header
+Organization: O.S. Systems Software LTDA.
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+ include/configs/updatehub-common.h | 70 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 include/configs/updatehub-common.h
+
+diff --git a/include/configs/updatehub-common.h b/include/configs/updatehub-common.h
+new file mode 100644
+index 0000000000..a1086aa4c5
+--- /dev/null
++++ b/include/configs/updatehub-common.h
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2017 O.S. Systems Software LTDA.
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/*
++ * This header helps to add support for UpdateHub in U-Boot. It
++ * assumes your U-Boot has support for bootcount (either using a SoC
++ * feature or the environment fallback).
++ */
++
++#ifndef __UPDATEHUB_H
++#define __UPDATEHUB_H
++
++#define CONFIG_BOOTCOUNT_LIMIT
++
++#ifdef CONFIG_ENV_IS_NOWHERE
++# error Environment saving is required for UpdateHub use
++#endif
++
++#define UPDATEHUB_ENV \
++    "upgrade_available=0\0" \
++    "bootlimit=1\0" \
++    "bootcount=0\0" \
++    \
++    "updatehub_find_root_a=" UPDATEHUB_FIND_ROOT_A ";\0" \
++    "updatehub_load_os_a=" UPDATEHUB_LOAD_OS_A ";\0" \
++    \
++    "updatehub_find_root_b=" UPDATEHUB_FIND_ROOT_B ";\0" \
++    "updatehub_load_os_b=" UPDATEHUB_LOAD_OS_B ";\0" \
++    \
++    "updatehub_bootargs=setenv bootargs " UPDATEHUB_BOOTARGS ";\0" \
++    \
++    "updatehub_altbootcmd=" \
++        "if test ${updatehub_active} = 0; then " \
++            "echo Bootcount limit reached. Reverting to image B; " \
++            "setenv updatehub_active 1; " \
++        "else " \
++            "echo Bootcount limit reached. Reverting to image A; " \
++            "setenv updatehub_active 1; " \
++        "fi; " \
++        "setenv upgrade_available 0; " \
++        "saveenv;\0" \
++    "altbootcmd=run updatehub_altbootcmd bootcmd;\0"
++
++#undef CONFIG_BOOTCOMMAND
++#define CONFIG_BOOTCOMMAND \
++    "if test -z \"${updatehub_active}\"; then " \
++        "echo Ensuring environment is accessible in Linux...; " \
++        "setenv updatehub_active 0; " \
++        "saveenv; " \
++    "fi; " \
++    "if test ${updatehub_active} = 0; then " \
++        "echo Loading system from A; " \
++        "run updatehub_find_root_a updatehub_load_os_a updatehub_bootargs; " \
++    "else " \
++        "if test ${updatehub_active} = 1; then " \
++            "echo Loading system from B; " \
++            "run updatehub_find_root_b updatehub_load_os_b updatehub_bootargs; " \
++        "else " \
++            "echo Invalid updatehub_active value, resetting it; " \
++            "setenv updatehub_active 0; " \
++            "saveenv; " \
++            "reset; " \
++        "fi; " \
++    "fi;" \
++    UPDATEHUB_BOOTCMD
++
++#endif  /* __UPDATEHUB_H */
+-- 
+2.13.3
+
