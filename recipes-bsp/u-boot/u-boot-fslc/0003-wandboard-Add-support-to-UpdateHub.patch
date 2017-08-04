@@ -1,0 +1,98 @@
+From 8ff38fe4aa596708f259df7376e472dd21ea03d9 Mon Sep 17 00:00:00 2001
+From: Fabio Berton <fabio.berton@ossystems.com.br>
+Date: Mon, 7 Aug 2017 10:30:34 -0300
+Subject: [PATCH 3/3] wandboard: Add support to UpdateHub
+Organization: O.S. Systems Software LTDA.
+
+Set all variables needed to use UpdateHub tool.
+
+Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+---
+ include/configs/wandboard.h | 71 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+
+diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
+index 41ad58214a..4be0298d8f 100644
+--- a/include/configs/wandboard.h
++++ b/include/configs/wandboard.h
+@@ -215,6 +215,77 @@
+ 			   "fi; " \
+ 		   "fi; " \
+ 	   "else run netboot; fi"
++#undef CONFIG_BOOTCOMMAND
++
++/*
++ * UpdateHub configuration
++ */
++
++#define CONFIG_BOOTCOUNT_ENV
++
++/* Environment */
++#define UPDATEHUB_LOAD_OS_A     "load mmc 0:1 ${loadaddr} /boot/${image}; " \
++                                "run findfdt;run videoargs;" \
++                                "load mmc 0:1 ${fdt_addr} /boot/${fdtfile}; "
++#define UPDATEHUB_FIND_ROOT_A   "part uuid mmc 0:1 uuid"
++
++#define UPDATEHUB_LOAD_OS_B     "load mmc 0:2 ${loadaddr} /boot/${image}; " \
++                                "run findfdt;run videoargs;" \
++                                "load mmc 0:2 ${fdt_addr} /boot/${fdtfile}; "
++#define UPDATEHUB_FIND_ROOT_B   "part uuid mmc 0:2 uuid"
++
++#define UPDATEHUB_BOOTARGS      "root=PARTUUID=${uuid} rootfstype=ext4 " \
++                                "rootwait rw console=${console},${baudrate} " \
++                                "${video_args}"
++#define UPDATEHUB_BOOTCMD       "bootz ${loadaddr} - ${fdt_addr}"
++
++#include <configs/updatehub-common.h>
++
++#undef CONFIG_EXTRA_ENV_SETTINGS
++#define CONFIG_EXTRA_ENV_SETTINGS \
++	"image=zImage\0" \
++	"console=ttymxc0\0" \
++	"fdtfile=undefined\0" \
++	"fdt_high=0xffffffff\0" \
++	"initrd_high=0xffffffff\0" \
++	"fdt_addr=0x18000000\0" \
++	"videoargs=" \
++		"setenv nextcon 0; " \
++		"if hdmidet; then " \
++			"setenv video_args " \
++				"video=mxcfb${nextcon}:dev=hdmi,1280x720M@60," \
++					"if=RGB24; " \
++			"setenv fbmen fbmem=28M; " \
++			"setexpr nextcon ${nextcon} + 1; " \
++		"else " \
++			"echo - no HDMI monitor;" \
++		"fi; " \
++		"i2c dev 1; " \
++		"if i2c probe 0x10; then " \
++			"setenv video_args " \
++				"video=mxcfb${nextcon}:dev=lcd,800x480@60," \
++					"if=RGB666,bpp=32; " \
++			"if test 0 -eq ${nextcon}; then " \
++				"setenv fbmem fbmem=10M; " \
++			"else " \
++				"setenv fbmem ${fbmem},10M; " \
++			"fi; " \
++			"setexpr nextcon ${nextcon} + 1; " \
++		"else " \
++			"echo '- no FWBADAPT-7WVGA-LCD-F07A-0102 display';" \
++		"fi; " \
++		"setenv video_args ${video_args} ${fbmem}\0" \
++	"findfdt="\
++		"if test $board_rev = MX6Q ; then " \
++			"setenv fdtfile imx6q-wandboard.dtb; fi; " \
++		"if test $board_rev = MX6DL ; then " \
++			"setenv fdtfile imx6dl-wandboard.dtb; fi; " \
++		"if test $fdtfile = undefined; then " \
++			"echo WARNING: Could not determine dtb to use; fi; \0" \
++    UPDATEHUB_ENV
++
++#define CONFIG_CMD_PART
++#define CONFIG_PARTITION_UUIDS
+ 
+ /* Physical Memory Map */
+ #define CONFIG_NR_DRAM_BANKS		1
+-- 
+2.13.3
+
