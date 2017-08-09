@@ -7,5 +7,7 @@ def __after_init_updatehub_freescale():
                         'meta-fsl-arm-extra',
                         'meta-updatehub-freescale',
                     ]])
+    # FSL EULA
+    eulas.accept['meta-fsl-arm/EULA'] = 'ACCEPT_FSL_EULA = "1"'
 
 run_after_init(__after_init_updatehub_freescale)
