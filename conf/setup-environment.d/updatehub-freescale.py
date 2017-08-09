@@ -3,6 +3,8 @@ def __after_init_updatehub_freescale():
 
     append_layers([ os.path.join(PLATFORM_ROOT_DIR, 'sources', p) for p in
                     [
+                        'meta-fsl-arm',
+                        'meta-fsl-arm-extra',
                         'meta-updatehub-freescale',
                     ]])
 
