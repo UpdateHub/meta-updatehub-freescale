@@ -3,11 +3,11 @@ def __after_init_updatehub_freescale():
 
     append_layers([ os.path.join(PLATFORM_ROOT_DIR, 'sources', p) for p in
                     [
-                        'meta-fsl-arm',
-                        'meta-fsl-arm-extra',
+                        'meta-freescale',
+                        'meta-freescale-3rdparty',
                         'meta-updatehub-freescale',
                     ]])
     # FSL EULA
-    eulas.accept['meta-fsl-arm/EULA'] = 'ACCEPT_FSL_EULA = "1"'
+    eulas.accept['meta-freescale/EULA'] = 'ACCEPT_FSL_EULA = "1"'
 
 run_after_init(__after_init_updatehub_freescale)
