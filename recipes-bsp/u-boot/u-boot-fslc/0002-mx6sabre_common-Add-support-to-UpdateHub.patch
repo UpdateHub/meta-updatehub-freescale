@@ -50,7 +50,7 @@ index fe0873e0c5..7b93e8566a 100644
 +    "image=zImage\0" \
 +    "fdt_file=undefined\0" \
 +    "fdt_addr=0x18000000\0" \
-+    "console=" CONFIG_CONSOLE_DEV "\0" \
++    "console=" CONSOLE_DEV "\0" \
 +    "fdt_high=0xffffffff\0"   \
 +    "initrd_high=0xffffffff\0" \
 +    "video_args_hdmi=setenv video_args $video_args " \

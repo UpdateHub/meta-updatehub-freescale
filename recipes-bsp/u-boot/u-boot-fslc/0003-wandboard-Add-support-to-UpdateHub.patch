@@ -12,13 +12,13 @@ Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
  1 file changed, 71 insertions(+)
 
 diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
-index 41ad58214a..4be0298d8f 100644
+index e21772f3c3..b2e052d0a9 100644
 --- a/include/configs/wandboard.h
 +++ b/include/configs/wandboard.h
-@@ -215,6 +215,77 @@
- 			   "fi; " \
- 		   "fi; " \
- 	   "else run netboot; fi"
+@@ -146,6 +146,77 @@
+ 	   "run distro_bootcmd"
+ 
+ #include <config_distro_bootcmd.h>
 +#undef CONFIG_BOOTCOMMAND
 +
 +/*
