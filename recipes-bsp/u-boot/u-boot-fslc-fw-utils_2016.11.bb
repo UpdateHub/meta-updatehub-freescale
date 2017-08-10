@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://Licenses/README;md5=a2c678cfd4a4d97135585cad908541c6"
 
 DEPENDS = "mtd-utils"
 
-SRCREV = "e6b42411ab33ec950ddb304de9dafaf8bad506a2"
-SRCBRANCH = "2016.07+fslc"
+SRCREV = "c44711d91e32a5738875fe505efc54f6958fd64e"
+SRCBRANCH = "2016.11+fslc"
 SRC_URI = "git://github.com/Freescale/u-boot-fslc.git;branch=${SRCBRANCH}"
 
 S = "${WORKDIR}/git"
