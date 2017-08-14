@@ -1,4 +1,4 @@
-From d931efb125a123d739685cc70a9e51ec9532495d Mon Sep 17 00:00:00 2001
+From 0873b0d8a60f525003f96cfb84c138f041d50aec Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Fri, 4 Aug 2017 17:36:45 -0300
 Subject: [PATCH 2/3] mx6sabre_common: Add support to UpdateHub
@@ -8,14 +8,26 @@ Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
- include/configs/mx6sabre_common.h | 68 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ configs/mx6dlsabresd_defconfig    |  2 ++
+ include/configs/mx6sabre_common.h | 65 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
+diff --git a/configs/mx6dlsabresd_defconfig b/configs/mx6dlsabresd_defconfig
+index 0254a53bf9..12dd08f6aa 100644
+--- a/configs/mx6dlsabresd_defconfig
++++ b/configs/mx6dlsabresd_defconfig
+@@ -42,3 +42,5 @@ CONFIG_G_DNL_VENDOR_NUM=0x0525
+ CONFIG_G_DNL_PRODUCT_NUM=0xa4a5
+ # CONFIG_VIDEO_SW_CURSOR is not set
+ CONFIG_OF_LIBFDT=y
++CONFIG_CMD_PART=y
++CONFIG_PARTITION_UUIDS=y
+\ No newline at end of file
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index fe0873e0c5..7b93e8566a 100644
+index d922de4de3..ada3f4cbed 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
-@@ -199,6 +199,74 @@
+@@ -196,6 +196,71 @@
  			"fi; " \
  		"fi; " \
  	"else run netboot; fi"
@@ -84,12 +96,9 @@ index fe0873e0c5..7b93e8566a 100644
 +                "echo WARNING: Could not determine dtb to use; fi; " \
 +        "fi;\0" \
 +    UPDATEHUB_ENV
-+
-+#define CONFIG_CMD_PART
-+#define CONFIG_PARTITION_UUIDS
  
  #define CONFIG_ARP_TIMEOUT     200UL
  
 -- 
-2.13.3
+2.14.1
 
