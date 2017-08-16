@@ -1,4 +1,4 @@
-From 0873b0d8a60f525003f96cfb84c138f041d50aec Mon Sep 17 00:00:00 2001
+From 7b4457edb5ecbbea0bbc4448e8bf8edddfa46120 Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Fri, 4 Aug 2017 17:36:45 -0300
 Subject: [PATCH 2/3] mx6sabre_common: Add support to UpdateHub
@@ -8,26 +8,24 @@ Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
- configs/mx6dlsabresd_defconfig    |  2 ++
+ configs/mx6sabresd_defconfig      |  1 +
  include/configs/mx6sabre_common.h | 65 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+)
+ 2 files changed, 66 insertions(+)
 
-diff --git a/configs/mx6dlsabresd_defconfig b/configs/mx6dlsabresd_defconfig
-index 0254a53bf9..12dd08f6aa 100644
---- a/configs/mx6dlsabresd_defconfig
-+++ b/configs/mx6dlsabresd_defconfig
-@@ -42,3 +42,5 @@ CONFIG_G_DNL_VENDOR_NUM=0x0525
+diff --git a/configs/mx6sabresd_defconfig b/configs/mx6sabresd_defconfig
+index e0b5a34fb7..ae6a07290c 100644
+--- a/configs/mx6sabresd_defconfig
++++ b/configs/mx6sabresd_defconfig
+@@ -51,3 +51,4 @@ CONFIG_G_DNL_VENDOR_NUM=0x0525
  CONFIG_G_DNL_PRODUCT_NUM=0xa4a5
  # CONFIG_VIDEO_SW_CURSOR is not set
  CONFIG_OF_LIBFDT=y
-+CONFIG_CMD_PART=y
 +CONFIG_PARTITION_UUIDS=y
-\ No newline at end of file
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index d922de4de3..ada3f4cbed 100644
+index f997604c91..3c4a281d30 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
-@@ -196,6 +196,71 @@
+@@ -195,6 +195,71 @@
  			"fi; " \
  		"fi; " \
  	"else run netboot; fi"
