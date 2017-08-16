@@ -4,11 +4,9 @@ LIC_FILES_CHKSUM = "file://Licenses/README;md5=a2c678cfd4a4d97135585cad908541c6"
 
 DEPENDS = "mtd-utils"
 
-SRCREV = "ac3b20cdbe5282fbfa46d7fd39358f5ee07e24d9"
-SRCBRANCH = "2017.03+fslc"
+SRCREV = "eddfedc6a5d8e214662b7d4ef5c054b4b111b5be"
+SRCBRANCH = "2017.07+fslc"
 SRC_URI = "git://github.com/Freescale/u-boot-fslc.git;branch=${SRCBRANCH}"
-
-SRC_URI += "file://default-gcc.patch"
 
 S = "${WORKDIR}/git"
 
