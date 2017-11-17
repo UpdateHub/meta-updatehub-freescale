@@ -1,0 +1,251 @@
+setenv bootargs ''
+
+setenv initrd_high 0xffffffff
+m4=''
+a_base=0x10000000
+if itest.s x51 == "x${cpu}" ; then
+    a_base=0x90000000
+elif itest.s x53 == "x${cpu}"; then
+    a_base=0x70000000
+elif itest.s x6SX == "x${cpu}" || itest.s x7D == "x${cpu}"; then
+    a_base=0x80000000
+    if itest.s "x1" == "x$m4enabled" ; then
+        run m4boot;
+        m4='-m4';
+    fi
+fi
+
+setexpr a_script  ${a_base} + 0x00800000
+setexpr a_zImage  ${a_base} + 0x00800000
+setexpr a_fdt     ${a_base} + 0x03000000
+setexpr a_ramdisk ${a_base} + 0x03800000
+setexpr a_initrd  ${a_base} + 0x03a00000
+setexpr a_reset_cause_marker ${a_base} + 0x80
+setexpr a_reset_cause        ${a_base} + 0x84
+
+if itest.s "x" == "x${board}" ; then
+    echo "!!!! Error: Your u-boot is outdated. Please upgrade.";
+    exit;
+fi
+
+if itest.s "x" == "x${dtbname}" ; then
+    if itest.s x6SOLO == "x${cpu}" ; then
+        dtbname=imx6dl-${board}.dtb;
+    elif itest.s x6DL == "x${cpu}" ; then
+        dtbname=imx6dl-${board}.dtb;
+    elif itest.s x6QP == "x${cpu}" ; then
+        dtbname=imx6qp-${board}.dtb;
+    elif itest.s x6SX == "x${cpu}" ; then
+        dtbname=imx6sx-${board}${m4}.dtb;
+    elif itest.s x7D == "x${cpu}" ; then
+        dtbname=imx7d-${board}${m4}.dtb;
+    elif itest.s x51 == "x${cpu}" ; then
+        dtbname=imx51-${board}${m4}.dtb;
+    elif itest.s x53 == "x${cpu}" ; then
+        dtbname=imx53-${board}${m4}.dtb;
+    else
+        dtbname=imx6q-${board}.dtb;
+    fi
+fi
+
+setenv updatehub_load_os_a "load mmc 0:2 ${a_zImage} /boot/zImage; load mmc 0:2 ${a_fdt} /boot/${dtbname}"
+setenv updatehub_find_root_a part uuid mmc 0:2 uuid
+setenv updatehub_load_os_b "load mmc 0:3 ${a_zImage} /boot/zImage; load mmc 0:3 ${a_fdt} /boot/${dtbname}"
+setenv updatehub_find_root_b part uuid mmc 0:3 uuid
+
+if itest.s "x" == "x${updatehub_active}" ; then
+    echo Ensuring environment is accessible in Linux...
+    setenv updatehub_active 0
+    saveenv
+fi
+
+if itest.s "${updatehub_active}" == 0 ; then
+    echo Loading system from A
+    run updatehub_find_root_a updatehub_load_os_a
+
+    fdt addr ${a_fdt}
+    cmd_xxx_present=
+    fdt resize
+    if itest.s "x" != "x${cmd_custom}" ; then
+        run cmd_custom
+        cmd_xxx_present=1;
+    fi
+
+    if itest.s "x" != "x${cmd_hdmi}" ; then
+        run cmd_hdmi
+        cmd_xxx_present=1;
+        if itest.s x == x${allow_noncea} ; then
+            setenv bootargs ${bootargs} mxc_hdmi.only_cea=1;
+            echo "only CEA modes allowed on HDMI port";
+        else
+            setenv bootargs ${bootargs} mxc_hdmi.only_cea=0;
+            echo "non-CEA modes allowed on HDMI, audio may be affected";
+        fi
+    fi
+
+    if itest.s "x" != "x${cmd_lcd}" ; then
+        run cmd_lcd
+        cmd_xxx_present=1;
+    fi
+    if itest.s "x" != "x${cmd_lcd2}" ; then
+        run cmd_lcd2
+        cmd_xxx_present=1;
+    fi
+    if itest.s "x" != "x${cmd_lvds}" ; then
+        run cmd_lvds
+        cmd_xxx_present=1;
+    fi
+    if itest.s "x" != "x${cmd_lvds2}" ; then
+        run cmd_lvds2
+        cmd_xxx_present=1;
+    fi
+
+    if itest.s "x" == "x${cmd_xxx_present}" ; then
+        echo "!!!!!!!!!!!!!!!!"
+        echo "warning: your u-boot may be outdated, please upgrade"
+        echo "!!!!!!!!!!!!!!!!"
+    fi
+
+    if itest.s "x" != "x${disable_msi}" ; then
+        setenv bootargs ${bootargs} pci=nomsi
+    fi;
+
+    if itest.s "x" != "x${disable_giga}" ; then
+        setenv bootargs ${bootargs} fec.disable_giga=1
+    fi
+
+    if itest.s "x" != "x${wlmac}" ; then
+        setenv bootargs ${bootargs} wlan.mac=${wlmac} wlcore.mac=${wlmac}
+    fi
+
+    if itest.s "x" != "x${bd_addr}" ; then
+        setenv bootargs ${bootargs} bd_addr=${bd_addr}
+    fi
+
+    if itest.s "x" != "x${gpumem}" ; then
+        setenv bootargs ${bootargs} galcore.contiguousSize=${gpumem}
+    fi
+
+    if itest.s "x" != "x${cma}" ; then
+        setenv bootargs ${bootargs} cma=${cma}
+    fi
+
+    if itest.s "x" != "x${loglevel}" ; then
+        setenv bootargs ${bootargs} loglevel=${loglevel}
+    fi
+
+    if itest *${a_reset_cause_marker} == 12345678 ; then
+        setexpr.l reset_cause *${a_reset_cause}
+        setenv bootargs $bootargs reset_cause=0x${reset_cause}
+    fi
+
+    if itest.s "x" != "x${show_fdt}" ; then
+        fdt print /
+    fi
+
+    if itest.s "x" != "x${show_env}" ; then
+        printenv
+    fi
+
+    setenv bootargs console=${console},115200 vmalloc=400M consoleblank=0 rootwait fixrtc cpu=${cpu} board=${board} root=PARTUUID=${uuid} rootwait rw ${bootargs}
+    bootz ${a_zImage} - ${a_fdt}
+
+else
+    if itest.s "${updatehub_active}" == 1 ; then
+        echo Loading system from B
+        run updatehub_find_root_b updatehub_load_os_b
+
+        fdt addr ${a_fdt}
+        cmd_xxx_present=
+        fdt resize
+        if itest.s "x" != "x${cmd_custom}" ; then
+            run cmd_custom
+            cmd_xxx_present=1;
+        fi
+
+        if itest.s "x" != "x${cmd_hdmi}" ; then
+            run cmd_hdmi
+            cmd_xxx_present=1;
+            if itest.s x == x${allow_noncea} ; then
+                setenv bootargs ${bootargs} mxc_hdmi.only_cea=1;
+                echo "only CEA modes allowed on HDMI port";
+            else
+                setenv bootargs ${bootargs} mxc_hdmi.only_cea=0;
+                echo "non-CEA modes allowed on HDMI, audio may be affected";
+            fi
+        fi
+
+        if itest.s "x" != "x${cmd_lcd}" ; then
+            run cmd_lcd
+            cmd_xxx_present=1;
+        fi
+        if itest.s "x" != "x${cmd_lcd2}" ; then
+            run cmd_lcd2
+            cmd_xxx_present=1;
+        fi
+        if itest.s "x" != "x${cmd_lvds}" ; then
+            run cmd_lvds
+            cmd_xxx_present=1;
+        fi
+        if itest.s "x" != "x${cmd_lvds2}" ; then
+            run cmd_lvds2
+            cmd_xxx_present=1;
+        fi
+
+        if itest.s "x" == "x${cmd_xxx_present}" ; then
+            echo "!!!!!!!!!!!!!!!!"
+            echo "warning: your u-boot may be outdated, please upgrade"
+            echo "!!!!!!!!!!!!!!!!"
+        fi
+
+        if itest.s "x" != "x${disable_msi}" ; then
+            setenv bootargs ${bootargs} pci=nomsi
+        fi;
+
+        if itest.s "x" != "x${disable_giga}" ; then
+            setenv bootargs ${bootargs} fec.disable_giga=1
+        fi
+
+        if itest.s "x" != "x${wlmac}" ; then
+            setenv bootargs ${bootargs} wlan.mac=${wlmac} wlcore.mac=${wlmac}
+        fi
+
+        if itest.s "x" != "x${bd_addr}" ; then
+            setenv bootargs ${bootargs} bd_addr=${bd_addr}
+        fi
+
+        if itest.s "x" != "x${gpumem}" ; then
+            setenv bootargs ${bootargs} galcore.contiguousSize=${gpumem}
+        fi
+
+        if itest.s "x" != "x${cma}" ; then
+            setenv bootargs ${bootargs} cma=${cma}
+        fi
+
+        if itest.s "x" != "x${loglevel}" ; then
+            setenv bootargs ${bootargs} loglevel=${loglevel}
+        fi
+
+        if itest *${a_reset_cause_marker} == 12345678 ; then
+            setexpr.l reset_cause *${a_reset_cause}
+            setenv bootargs $bootargs reset_cause=0x${reset_cause}
+        fi
+
+        if itest.s "x" != "x${show_fdt}" ; then
+            fdt print /
+        fi
+
+        if itest.s "x" != "x${show_env}" ; then
+            printenv
+        fi
+
+        setenv bootargs root=PARTUUID=${uuid} console=${console},115200 vmalloc=400M consoleblank=0 fixrtc cpu=${cpu} board=${board} rootwait rw ${bootargs}
+        bootz ${a_zImage} - ${a_fdt}
+
+    else
+        echo Invalid updatehub_active value, resetting it
+        setenv updatehub_active 0
+        saveenv
+        reset
+    fi
+fi

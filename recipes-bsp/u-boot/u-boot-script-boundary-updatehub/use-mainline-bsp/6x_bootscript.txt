@@ -1,0 +1,212 @@
+setenv bootargs ''
+
+setenv initrd_high 0xffffffff
+a_base=0x10000000
+if itest.s x51 == "x${cpu}" ; then
+    a_base=0x90000000
+elif itest.s x53 == "x${cpu}"; then
+    a_base=0x70000000
+elif itest.s x6SX == "x${cpu}" || itest.s x7D == "x${cpu}"; then
+    a_base=0x80000000
+fi
+
+setexpr a_script  ${a_base} + 0x00800000
+setexpr a_zImage  ${a_base} + 0x00800000
+setexpr a_fdt     ${a_base} + 0x03000000
+setexpr a_ramdisk ${a_base} + 0x03800000
+setexpr a_initrd  ${a_base} + 0x03a00000
+setexpr a_reset_cause_marker ${a_base} + 0x80
+setexpr a_reset_cause        ${a_base} + 0x84
+
+if itest.s "x" == "x${board}" ; then
+    echo "!!!! Error: Your u-boot is outdated. Please upgrade.";
+    exit;
+fi
+
+if itest.s "x" == "x${dtbname}" ; then
+    if itest.s x6SOLO == "x${cpu}" ; then
+        dtbname=imx6dl-${board}.dtb;
+    elif itest.s x6DL == "x${cpu}" ; then
+        dtbname=imx6dl-${board}.dtb;
+    elif itest.s x6QP == "x${cpu}" ; then
+        dtbname=imx6qp-${board}.dtb;
+    elif itest.s x6SX == "x${cpu}" ; then
+        dtbname=imx6sx-${board}.dtb;
+    elif itest.s x7D == "x${cpu}" ; then
+        dtbname=imx7d-${board}.dtb;
+    elif itest.s x51 == "x${cpu}" ; then
+        dtbname=imx51-${board}${m4}.dtb;
+    elif itest.s x53 == "x${cpu}" ; then
+        dtbname=imx53-${board}${m4}.dtb;
+    else
+        dtbname=imx6q-${board}.dtb;
+    fi
+fi
+
+setenv updatehub_load_os_a "load mmc 0:2 ${a_zImage} /boot/zImage; load mmc 0:2 ${a_fdt} /boot/${dtbname}"
+setenv updatehub_find_root_a part uuid mmc 0:2 uuid
+setenv updatehub_load_os_b "load mmc 0:3 ${a_zImage} /boot/zImage; load mmc 0:3 ${a_fdt} /boot/${dtbname}"
+setenv updatehub_find_root_b part uuid mmc 0:3 uuid
+
+if itest.s "x" == "x${updatehub_active}" ; then
+    echo Ensuring environment is accessible in Linux...
+    setenv updatehub_active 0
+    saveenv
+fi
+
+if itest.s "${updatehub_active}" == 0 ; then
+    echo Loading system from A
+    run updatehub_find_root_a updatehub_load_os_a
+
+    fdt addr ${a_fdt}
+    fdt resize
+    if itest.s "x" != "x${cmd_custom}" ; then
+        run cmd_custom
+    fi
+
+    ## HDMI ##
+    if itest.s "xoff" == "x$fb_hdmi" ; then
+        setenv bootargs $bootargs video=HDMI-A-1:d
+    else
+        if itest.s "x" != "x$force_edid" ; then
+            echo "------ forcing EDID to /lib/firmware/$force_edid"
+            setenv bootargs $bootargs drm_kms_helper.edid_firmware=$force_edid
+        fi
+    fi
+
+    ## LVDS ##
+    if itest.s "xoff" == "x$fb_lvds" ; then
+        setenv bootargs $bootargs video=LVDS-1:d
+    elif itest.s "xhannstar7" == "x$fb_lvds" ; then
+        fdt set /panel-lvds0 compatible "hannstar,hsd070pww1"
+    elif itest.s "xtm070jdhg30" == "x$fb_lvds" ; then
+        fdt set /panel-lvds0 compatible "tianma,tm070jdhg30"
+    elif itest.s "xdt070btft" == "x$fb_lvds" ; then
+        fdt set /panel-lvds0 compatible "innolux,zj070na-01p"
+    fi
+
+    if itest.s "xoff" == "x$fb_lvds2" ; then
+        setenv bootargs $bootargs video=LVDS-2:d
+    elif itest.s "xhannstar7" == "x$fb_lvds2" ; then
+        fdt set /panel-lvds1 compatible "hannstar,hsd070pww1"
+    elif itest.s "xtm070jdhg30" == "x$fb_lvds2" ; then
+        fdt set /panel-lvds1 compatible "tianma,tm070jdhg30"
+    elif itest.s "xdt070btft" == "x$fb_lvds2" ; then
+        fdt set /panel-lvds1 compatible "innolux,zj070na-01p"
+    fi
+
+    ## LCD ##
+    if itest.s "xoff" == "x$fb_lcd" ; then
+        setenv bootargs $bootargs video=VGA-1:d
+    fi
+
+    if itest.s "x" == "x$cma" ; then
+        cma=256M
+    fi
+
+    if itest.s "x" == "x$vmalloc" ; then
+        vmalloc=400M
+    fi
+
+    if itest.s "x" != "x$show_fdt" ; then
+        fdt print /
+    fi
+
+    if itest.s "x" != "x$show_env" ; then
+        printenv
+    fi
+
+    if itest.s "x" != "x${loglevel}" ; then
+        setenv bootargs ${bootargs} loglevel=${loglevel}
+    fi
+
+    if itest *${a_reset_cause_marker} == 12345678 ; then
+        setexpr.l reset_cause *${a_reset_cause}
+        setenv bootargs $bootargs reset_cause=0x${reset_cause}
+    fi
+
+    setenv bootargs console=${console},115200 vmalloc=${vmalloc} cma=${cma} consoleblank=0 root=PARTUUID=${uuid} rootwait rw ${bootargs}
+    bootz ${a_zImage} - ${a_fdt}
+
+else
+    if itest.s "${updatehub_active}" == 1 ; then
+        echo Loading system from B
+        run updatehub_find_root_b updatehub_load_os_b
+
+        fdt addr ${a_fdt}
+        fdt resize
+        if itest.s "x" != "x${cmd_custom}" ; then
+            run cmd_custom
+        fi
+
+        ## HDMI ##
+        if itest.s "xoff" == "x$fb_hdmi" ; then
+            setenv bootargs $bootargs video=HDMI-A-1:d
+        else
+            if itest.s "x" != "x$force_edid" ; then
+                echo "------ forcing EDID to /lib/firmware/$force_edid"
+                setenv bootargs $bootargs drm_kms_helper.edid_firmware=$force_edid
+            fi
+        fi
+
+        ## LVDS ##
+        if itest.s "xoff" == "x$fb_lvds" ; then
+            setenv bootargs $bootargs video=LVDS-1:d
+        elif itest.s "xhannstar7" == "x$fb_lvds" ; then
+            fdt set /panel-lvds0 compatible "hannstar,hsd070pww1"
+        elif itest.s "xtm070jdhg30" == "x$fb_lvds" ; then
+            fdt set /panel-lvds0 compatible "tianma,tm070jdhg30"
+        elif itest.s "xdt070btft" == "x$fb_lvds" ; then
+            fdt set /panel-lvds0 compatible "innolux,zj070na-01p"
+        fi
+
+        if itest.s "xoff" == "x$fb_lvds2" ; then
+            setenv bootargs $bootargs video=LVDS-2:d
+        elif itest.s "xhannstar7" == "x$fb_lvds2" ; then
+            fdt set /panel-lvds1 compatible "hannstar,hsd070pww1"
+        elif itest.s "xtm070jdhg30" == "x$fb_lvds2" ; then
+            fdt set /panel-lvds1 compatible "tianma,tm070jdhg30"
+        elif itest.s "xdt070btft" == "x$fb_lvds2" ; then
+            fdt set /panel-lvds1 compatible "innolux,zj070na-01p"
+        fi
+
+        ## LCD ##
+        if itest.s "xoff" == "x$fb_lcd" ; then
+            setenv bootargs $bootargs video=VGA-1:d
+        fi
+
+        if itest.s "x" == "x$cma" ; then
+            cma=256M
+        fi
+
+        if itest.s "x" == "x$vmalloc" ; then
+            vmalloc=400M
+        fi
+
+        if itest.s "x" != "x$show_fdt" ; then
+            fdt print /
+        fi
+
+        if itest.s "x" != "x$show_env" ; then
+            printenv
+        fi
+
+        if itest.s "x" != "x${loglevel}" ; then
+            setenv bootargs ${bootargs} loglevel=${loglevel}
+        fi
+
+        if itest *${a_reset_cause_marker} == 12345678 ; then
+            setexpr.l reset_cause *${a_reset_cause}
+            setenv bootargs $bootargs reset_cause=0x${reset_cause}
+        fi
+
+        setenv bootargs root=PARTUUID=${uuid} console=${console},115200 vmalloc==${vmalloc} cma=${cma} consoleblank=0 fixrtc cpu=${cpu} board=${board} rootwait rw ${bootargs}
+        bootz ${a_zImage} - ${a_fdt}
+
+    else
+        echo Invalid updatehub_active value, resetting it
+        setenv updatehub_active 0
+        saveenv
+        reset
+    fi
+fi
