@@ -3,6 +3,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=80
 
 DEPENDS = "u-boot-mkimage-native"
 
+PROVIDES += "u-boot-script-boundary"
+
 SRC_URI = "file://6x_bootscript.txt"
 
 inherit deploy
