@@ -200,7 +200,7 @@ else
             setenv bootargs $bootargs reset_cause=0x${reset_cause}
         fi
 
-        setenv bootargs root=PARTUUID=${uuid} console=${console},115200 vmalloc==${vmalloc} cma=${cma} consoleblank=0 fixrtc cpu=${cpu} board=${board} rootwait rw ${bootargs}
+        setenv bootargs console=${console},115200 vmalloc=${vmalloc} cma=${cma} consoleblank=0 root=PARTUUID=${uuid} rootwait rw ${bootargs}
         bootz ${a_zImage} - ${a_fdt}
 
     else
