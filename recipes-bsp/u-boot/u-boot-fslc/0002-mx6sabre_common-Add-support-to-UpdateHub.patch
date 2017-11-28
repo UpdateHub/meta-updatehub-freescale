@@ -9,8 +9,9 @@ Set all variables needed to use UpdateHub tool.
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
  configs/mx6dlsabresd_defconfig    |  2 ++
+ configs/mx6qsabresd_defconfig     |  2 ++
  include/configs/mx6sabre_common.h | 65 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+)
+ 3 files changed, 69 insertions(+)
 
 diff --git a/configs/mx6dlsabresd_defconfig b/configs/mx6dlsabresd_defconfig
 index 0254a53bf9..12dd08f6aa 100644
@@ -23,6 +24,16 @@ index 0254a53bf9..12dd08f6aa 100644
 +CONFIG_CMD_PART=y
 +CONFIG_PARTITION_UUIDS=y
 \ No newline at end of file
+diff --git a/configs/mx6qsabresd_defconfig b/configs/mx6qsabresd_defconfig
+index cef7f1a5b3..fe0c165b80 100644
+--- a/configs/mx6qsabresd_defconfig
++++ b/configs/mx6qsabresd_defconfig
+@@ -42,3 +42,5 @@ CONFIG_G_DNL_VENDOR_NUM=0x0525
+ CONFIG_G_DNL_PRODUCT_NUM=0xa4a5
+ # CONFIG_VIDEO_SW_CURSOR is not set
+ CONFIG_OF_LIBFDT=y
++CONFIG_CMD_PART=y
++CONFIG_PARTITION_UUIDS=y
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
 index d922de4de3..ada3f4cbed 100644
 --- a/include/configs/mx6sabre_common.h
