@@ -1,4 +1,4 @@
-From bf1df696fe9fe32696d5a6f1ef0d0947e73e89dd Mon Sep 17 00:00:00 2001
+From 7ffe81889d7117901d30b133bc3f127f601273f7 Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Mon, 7 Aug 2017 10:30:34 -0300
 Subject: [PATCH 3/3] wandboard: Add support to UpdateHub
@@ -9,24 +9,24 @@ Set all variables needed to use UpdateHub tool.
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
  configs/wandboard_defconfig |  2 ++
- include/configs/wandboard.h | 68 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ include/configs/wandboard.h | 78 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
 diff --git a/configs/wandboard_defconfig b/configs/wandboard_defconfig
-index f4c9b6bc76..07fb912837 100644
+index a4518fcce0..05d4554abe 100644
 --- a/configs/wandboard_defconfig
 +++ b/configs/wandboard_defconfig
-@@ -32,3 +32,5 @@ CONFIG_USB=y
- CONFIG_USB_STORAGE=y
+@@ -36,3 +36,5 @@ CONFIG_USB_STORAGE=y
+ CONFIG_VIDEO=y
  # CONFIG_VIDEO_SW_CURSOR is not set
  CONFIG_OF_LIBFDT=y
 +CONFIG_CMD_PART=y
 +CONFIG_PARTITION_UUIDS=y
 diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
-index ee18d290da..be7ed9af1e 100644
+index 8fdfc0277d..c1965491dd 100644
 --- a/include/configs/wandboard.h
 +++ b/include/configs/wandboard.h
-@@ -141,6 +141,78 @@
+@@ -146,6 +146,84 @@
  	   "run distro_bootcmd"
  
  #include <config_distro_bootcmd.h>
@@ -91,10 +91,16 @@ index ee18d290da..be7ed9af1e 100644
 +		"fi; " \
 +		"setenv video_args ${video_args} ${fbmem}\0" \
 +	"findfdt="\
++		"if test $board_name = D1 && test $board_rev = MX6QP ; then " \
++			"setenv fdtfile imx6qp-wandboard-revd1.dtb; fi; " \
++		"if test $board_name = D1 && test $board_rev = MX6Q ; then " \
++			"setenv fdtfile imx6q-wandboard-revd1.dtb; fi; " \
++		"if test $board_name = D1 && test $board_rev = MX6DL ; then " \
++			"setenv fdtfile imx6dl-wandboard-revd1.dtb; fi; " \
 +		"if test $board_name = C1 && test $board_rev = MX6Q ; then " \
-+			"setenv fdtfile imx6q-wandboard-revc1.dtb; fi; " \
++			"setenv fdtfile imx6q-wandboard.dtb; fi; " \
 +		"if test $board_name = C1 && test $board_rev = MX6DL ; then " \
-+			"setenv fdtfile imx6dl-wandboard-revc1.dtb; fi; " \
++			"setenv fdtfile imx6dl-wandboard.dtb; fi; " \
 +		"if test $board_name = B1 && test $board_rev = MX6Q ; then " \
 +			"setenv fdtfile imx6q-wandboard-revb1.dtb; fi; " \
 +		"if test $board_name = B1 && test $board_rev = MX6DL ; then " \
@@ -106,5 +112,5 @@ index ee18d290da..be7ed9af1e 100644
  /* Physical Memory Map */
  #define CONFIG_NR_DRAM_BANKS		1
 -- 
-2.14.1
+2.15.1
 
