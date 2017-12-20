@@ -12,5 +12,8 @@ This layer depends on:
   URI: git://github.com/Freescale/meta-fsl-arm.git
   branch: krogoth
 
+  URI: git://github.com/Freescale/meta-fsl-arm-extra.git
+  branch: krogoth
+
   URI: git://github.com/UpdateHub/meta-updatehub.git
   branch: krogoth
