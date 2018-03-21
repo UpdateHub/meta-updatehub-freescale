@@ -1,7 +1,7 @@
 From 7ffe81889d7117901d30b133bc3f127f601273f7 Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Mon, 7 Aug 2017 10:30:34 -0300
-Subject: [PATCH 3/3] wandboard: Add support to UpdateHub
+Subject: [PATCH 3/4] wandboard: Add support to UpdateHub
 Organization: O.S. Systems Software LTDA.
 
 Set all variables needed to use UpdateHub tool.
