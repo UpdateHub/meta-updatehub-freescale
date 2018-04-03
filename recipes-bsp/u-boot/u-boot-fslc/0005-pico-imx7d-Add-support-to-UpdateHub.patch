@@ -1,21 +1,22 @@
-From 3a23484c6744b80070ea2bf5044ae75a517cbff3 Mon Sep 17 00:00:00 2001
+From 77685a49915936d328c747d29d3885ccf626f756 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean TEXIER <texier.pj2@gmail.com>
-Date: Tue, 20 Mar 2018 22:56:09 +0100
-Subject: [PATCH 4/5] warp7: Add support to UpdateHub
+Date: Tue, 3 Apr 2018 18:15:36 +0200
+Subject: [PATCH 5/5] pico-imx7d: Add support to UpdateHub
 
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 ---
- include/configs/warp7.h | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ include/configs/pico-imx7d.h | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 11f1bc3..000168f 100644
---- a/include/configs/warp7.h
-+++ b/include/configs/warp7.h
-@@ -79,6 +79,42 @@
- 		   "fi; " \
- 	   "fi"
- 
+diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
+index 462c5bf..38800b0 100644
+--- a/include/configs/pico-imx7d.h
++++ b/include/configs/pico-imx7d.h
+@@ -84,6 +84,41 @@
+ 		"else run netboot; " \
+ 		"fi; " \
+ 	"else run netboot; fi"
++	
 +#undef CONFIG_BOOTCOMMAND
 +
 +/*
@@ -41,20 +42,18 @@ index 11f1bc3..000168f 100644
 +
 +#undef CONFIG_EXTRA_ENV_SETTINGS
 +#define CONFIG_EXTRA_ENV_SETTINGS \
-+	CONFIG_DFU_ENV_SETTINGS \
 +	"image=zImage\0" \
-+	"console=ttymxc0\0" \
++	"console=ttymxc4\0" \
 +	"ethact=usb_ether\0" \
 +	"fdt_high=0xffffffff\0" \
 +	"initrd_high=0xffffffff\0" \
-+	"fdt_file=imx7s-warp.dtb\0" \
++	"fdt_file=imx7d-pico.dtb\0" \
 +	"fdt_addr=0x83000000\0" \
 +	"ip_dyn=yes\0" \
 +	UPDATEHUB_ENV
-+
+ 
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
- 
 -- 
 2.7.4
 
