@@ -5,14 +5,15 @@ Subject: [PATCH 1/5] UpdateHub: Add common header
 Organization: O.S. Systems Software LTDA.
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
 ---
- include/configs/updatehub-common.h | 70 ++++++++++++++++++++++++++++++++++++++
+ include/configs/updatehub-common.h | 70 ++++++++++++++++++++++++++++++
  1 file changed, 70 insertions(+)
  create mode 100644 include/configs/updatehub-common.h
 
 diff --git a/include/configs/updatehub-common.h b/include/configs/updatehub-common.h
 new file mode 100644
-index 0000000000..a1086aa4c5
+index 0000000000..21c7896fec
 --- /dev/null
 +++ b/include/configs/updatehub-common.h
 @@ -0,0 +1,70 @@
@@ -86,6 +87,3 @@ index 0000000000..a1086aa4c5
 +    UPDATEHUB_BOOTCMD
 +
 +#endif  /* __UPDATEHUB_H */
--- 
-2.13.3
-

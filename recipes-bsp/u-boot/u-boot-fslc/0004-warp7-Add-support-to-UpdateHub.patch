@@ -4,15 +4,16 @@ Date: Tue, 20 Mar 2018 22:56:09 +0100
 Subject: [PATCH 4/5] warp7: Add support to UpdateHub
 
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
+
 ---
  include/configs/warp7.h | 36 ++++++++++++++++++++++++++++++++++++
  1 file changed, 36 insertions(+)
 
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 11f1bc3..000168f 100644
+index 2a7789baa2..a6bb61b50b 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -79,6 +79,42 @@
+@@ -96,6 +96,42 @@
  		   "fi; " \
  	   "fi"
  
@@ -55,6 +56,3 @@ index 11f1bc3..000168f 100644
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
  
--- 
-2.7.4
-

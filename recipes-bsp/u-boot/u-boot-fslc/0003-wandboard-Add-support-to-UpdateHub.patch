@@ -7,27 +7,28 @@ Organization: O.S. Systems Software LTDA.
 Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+
 ---
- configs/wandboard_defconfig |  2 ++
- include/configs/wandboard.h | 78 +++++++++++++++++++++++++++++++++++++++++++++
+ configs/wandboard_defconfig |  2 +
+ include/configs/wandboard.h | 78 +++++++++++++++++++++++++++++++++++++
  2 files changed, 80 insertions(+)
 
 diff --git a/configs/wandboard_defconfig b/configs/wandboard_defconfig
-index a4518fcce0..05d4554abe 100644
+index 03335298eb..5273340ae2 100644
 --- a/configs/wandboard_defconfig
 +++ b/configs/wandboard_defconfig
-@@ -36,3 +36,5 @@ CONFIG_USB_STORAGE=y
+@@ -42,3 +42,5 @@ CONFIG_USB_STORAGE=y
  CONFIG_VIDEO=y
  # CONFIG_VIDEO_SW_CURSOR is not set
  CONFIG_OF_LIBFDT=y
 +CONFIG_CMD_PART=y
 +CONFIG_PARTITION_UUIDS=y
 diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
-index 8fdfc0277d..c1965491dd 100644
+index cb32cd11f9..82c238531d 100644
 --- a/include/configs/wandboard.h
 +++ b/include/configs/wandboard.h
-@@ -146,6 +146,84 @@
- 	   "run distro_bootcmd"
+@@ -135,6 +135,84 @@
+ 	func(DHCP, dhcp, na)
  
  #include <config_distro_bootcmd.h>
 +#undef CONFIG_BOOTCOMMAND
@@ -111,6 +112,3 @@ index 8fdfc0277d..c1965491dd 100644
  
  /* Physical Memory Map */
  #define CONFIG_NR_DRAM_BANKS		1
--- 
-2.15.1
-

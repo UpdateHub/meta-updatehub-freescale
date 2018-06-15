@@ -7,25 +7,26 @@ Organization: O.S. Systems Software LTDA.
 Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+
 ---
  configs/mx6sabresd_defconfig      |  1 +
- include/configs/mx6sabre_common.h | 65 +++++++++++++++++++++++++++++++++++++++
+ include/configs/mx6sabre_common.h | 65 +++++++++++++++++++++++++++++++
  2 files changed, 66 insertions(+)
 
 diff --git a/configs/mx6sabresd_defconfig b/configs/mx6sabresd_defconfig
-index 78c977781b..6003c89c28 100644
+index ed8a69b534..832e70b5df 100644
 --- a/configs/mx6sabresd_defconfig
 +++ b/configs/mx6sabresd_defconfig
-@@ -62,3 +62,4 @@ CONFIG_USB_ETHER_ASIX=y
+@@ -73,3 +73,4 @@ CONFIG_USB_ETHER_ASIX=y
  CONFIG_VIDEO=y
  # CONFIG_VIDEO_SW_CURSOR is not set
  CONFIG_OF_LIBFDT=y
 +CONFIG_PARTITION_UUIDS=y
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index 53c9f057cb..96bfed264c 100644
+index 2ee91dab15..b17fb22ecf 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
-@@ -194,6 +194,71 @@
+@@ -190,6 +190,71 @@
  			"fi; " \
  		"fi; " \
  	"else run netboot; fi"
@@ -97,6 +98,3 @@ index 53c9f057cb..96bfed264c 100644
  
  #define CONFIG_ARP_TIMEOUT     200UL
  
--- 
-2.15.1
-

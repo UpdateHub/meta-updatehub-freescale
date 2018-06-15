@@ -4,15 +4,16 @@ Date: Tue, 3 Apr 2018 18:15:36 +0200
 Subject: [PATCH 5/5] pico-imx7d: Add support to UpdateHub
 
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
+
 ---
  include/configs/pico-imx7d.h | 35 +++++++++++++++++++++++++++++++++++
  1 file changed, 35 insertions(+)
 
 diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
-index 462c5bf..38800b0 100644
+index e5535eef7d..07806428ba 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
-@@ -84,6 +84,41 @@
+@@ -83,6 +83,41 @@
  		"else run netboot; " \
  		"fi; " \
  	"else run netboot; fi"
@@ -54,6 +55,3 @@ index 462c5bf..38800b0 100644
  
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
--- 
-2.7.4
-
