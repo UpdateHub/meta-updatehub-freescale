@@ -3,7 +3,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=80
 
 DEPENDS = "u-boot-mkimage-native"
 
-SRC_URI = "file://6x_bootscript.txt"
+SRC_URI = "file://boot.scr"
 
 inherit deploy
 
@@ -11,21 +11,21 @@ do_compile[noexec] = "1"
 
 do_mkimage () {
     uboot-mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-                  -n "boot script" -d ${WORKDIR}/6x_bootscript.txt \
-                  ${B}/6x_bootscript
+                  -n "boot script" -d ${WORKDIR}/boot.scr \
+                  ${B}/boot.scr
 }
 
 addtask mkimage after do_compile before do_install
 
 do_install () {
-    install -Dm 0644 ${B}/6x_bootscript ${D}/6x_bootscript
+    install -Dm 0644 ${B}/boot.scr ${D}/boot.scr
 }
 
 do_deploy () {
-    install -Dm 0644 ${B}/6x_bootscript ${DEPLOYDIR}/6x_bootscript-${MACHINE}-${PV}-${PR}
+    install -Dm 0644 ${B}/boot.scr ${DEPLOYDIR}/boot.scr-${MACHINE}-${PV}-${PR}
     cd ${DEPLOYDIR}
-    rm -f 6x_bootscript-${MACHINE}
-    ln -sf 6x_bootscript-${MACHINE}-${PV}-${PR} 6x_bootscript-${MACHINE}
+    rm -f boot.scr-${MACHINE}
+    ln -sf boot.scr-${MACHINE}-${PV}-${PR} boot.scr-${MACHINE}
 }
 
 addtask deploy after do_install before do_build
