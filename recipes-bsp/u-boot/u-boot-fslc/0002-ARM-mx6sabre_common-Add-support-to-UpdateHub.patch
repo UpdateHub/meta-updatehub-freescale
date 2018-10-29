@@ -1,0 +1,191 @@
+From 84af11871e8798a6313134f74aa2e1e97f2a3864 Mon Sep 17 00:00:00 2001
+From: Fabio Berton <fabio.berton@ossystems.com.br>
+Date: Fri, 4 Aug 2017 17:36:45 -0300
+Subject: [PATCH 2/5] ARM: mx6sabre_common: Add support to UpdateHub
+Organization: O.S. Systems Software LTDA.
+
+Set all variables needed to use UpdateHub tool.
+
+Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+ configs/mx6sabresd_defconfig      |   6 +-
+ include/configs/mx6sabre_common.h | 137 ++++++++++++++++++++++++++++++
+ 2 files changed, 141 insertions(+), 2 deletions(-)
+
+diff --git a/configs/mx6sabresd_defconfig b/configs/mx6sabresd_defconfig
+index de36d8657d..cb338ee5c6 100644
+--- a/configs/mx6sabresd_defconfig
++++ b/configs/mx6sabresd_defconfig
+@@ -9,9 +9,8 @@ CONFIG_SPL_MMC_SUPPORT=y
+ CONFIG_SPL_SERIAL_SUPPORT=y
+ CONFIG_SPL=y
+ CONFIG_SPL_LIBDISK_SUPPORT=y
+-CONFIG_NR_DRAM_BANKS=1
+-CONFIG_VIDEO=y
+ CONFIG_CMD_HDMIDETECT=y
++CONFIG_NR_DRAM_BANKS=1
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg"
+ # CONFIG_CONSOLE_MUX is not set
+ CONFIG_SYS_CONSOLE_IS_IN_ENV=y
+@@ -50,6 +49,9 @@ CONFIG_CMD_FS_GENERIC=y
+ CONFIG_EFI_PARTITION=y
+ CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
++CONFIG_BOOTCOUNT_BOOTLIMIT=1
+ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x12000000
+ CONFIG_FASTBOOT_BUF_SIZE=0x10000000
+diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
+index 439bbadd74..abe3dc0ffc 100644
+--- a/include/configs/mx6sabre_common.h
++++ b/include/configs/mx6sabre_common.h
+@@ -190,6 +190,143 @@
+ 		"fi; " \
+ 	"else run netboot; fi"
+ 
++#undef CONFIG_BOOTCOMMAND
++
++/*
++ * UpdateHub configuration
++ */
++
++/* Environment */
++#define UPDATEHUB_LOAD_OS_A     "load mmc 1:1 ${loadaddr} /boot/${image}; " \
++                                "run findfdt; run video_args_script; " \
++                                "load mmc 1:1 ${fdt_addr} /boot/${fdt_file}; "
++#define UPDATEHUB_FIND_ROOT_A   "part uuid mmc 1:1 uuid"
++
++#define UPDATEHUB_LOAD_OS_B     "load mmc 1:2 ${loadaddr} /boot/${image}; " \
++                                "run findfdt; run video_args_script; " \
++                                "load mmc 1:2 ${fdt_addr} /boot/${fdt_file}; "
++#define UPDATEHUB_FIND_ROOT_B   "part uuid mmc 1:2 uuid"
++
++#define UPDATEHUB_BOOTARGS      "root=PARTUUID=${uuid} rootfstype=ext4 " \
++                                "rootwait rw console=${console},${baudrate} " \
++                                "${video_args}"
++#define UPDATEHUB_BOOTCMD       "bootz ${loadaddr} - ${fdt_addr}"
++
++#include <configs/updatehub-common.h>
++
++#undef CONFIG_EXTRA_ENV_SETTINGS
++#define CONFIG_EXTRA_ENV_SETTINGS \
++	"script=boot.scr\0" \
++	"image=zImage\0" \
++	"fdt_file=undefined\0" \
++	"fdt_addr=0x18000000\0" \
++	"boot_fdt=try\0" \
++	"ip_dyn=yes\0" \
++	"console=" CONSOLE_DEV "\0" \
++	"dfuspi=dfu 0 sf 0:0:10000000:0\0" \
++	"dfu_alt_info_spl=spl raw 0x400\0" \
++	"dfu_alt_info_img=u-boot raw 0x10000\0" \
++	"dfu_alt_info=spl raw 0x400\0" \
++	"fdt_high=0xffffffff\0"	  \
++	"initrd_high=0xffffffff\0" \
++	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
++	"mmcpart=1\0" \
++	"finduuid=part uuid mmc ${mmcdev}:2 uuid\0" \
++	"update_sd_firmware=" \
++		"if test ${ip_dyn} = yes; then " \
++			"setenv get_cmd dhcp; " \
++		"else " \
++			"setenv get_cmd tftp; " \
++		"fi; " \
++		"if mmc dev ${mmcdev}; then "	\
++			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
++				"setexpr fw_sz ${filesize} / 0x200; " \
++				"setexpr fw_sz ${fw_sz} + 1; "	\
++				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
++			"fi; "	\
++		"fi\0" \
++	EMMC_ENV	  \
++	"video_args_hdmi=setenv video_args $video_args " \
++		"video=mxcfb${fb}:dev=hdmi,1280x720M@60,if=RGB24\0" \
++	"video_args_lvds=setenv video_args $video_args " \
++		"video=mxcfb${fb}:dev=ldb,LDB-XGA,if=RGB666\0" \
++	"video_args_lcd=setenv video_args $video_args " \
++		"video=mxcfb${fb}:dev=lcd,CLAA-WVGA,if=RGB666\0" \
++	"fb=0\0" \
++	"video_args_script=" \
++		"for v in ${video_interfaces}; do " \
++			"run video_args_${v}; " \
++			"setexpr fb $fb + 1; " \
++		"done\0" \
++	"mmcargs=setenv bootargs console=${console},${baudrate} " \
++		"root=PARTUUID=${uuid} rootwait rw " \
++		VIDEO_ARGS "\0" \
++	"loadbootscript=" \
++		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
++	"bootscript=echo Running bootscript from mmc ...; " \
++		"source\0" \
++	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
++	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
++	"mmcboot=echo Booting from mmc ...; " \
++		"run finduuid; " \
++		VIDEO_ARGS_SCRIPT \
++		"run mmcargs; " \
++		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
++			"if run loadfdt; then " \
++				"bootz ${loadaddr} - ${fdt_addr}; " \
++			"else " \
++				"if test ${boot_fdt} = try; then " \
++					"bootz; " \
++				"else " \
++					"echo WARN: Cannot load the DT; " \
++				"fi; " \
++			"fi; " \
++		"else " \
++			"bootz; " \
++		"fi;\0" \
++	"netargs=setenv bootargs console=${console},${baudrate} " \
++		"root=/dev/nfs " \
++		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
++	"netboot=echo Booting from net ...; " \
++		"run netargs; " \
++		"if test ${ip_dyn} = yes; then " \
++			"setenv get_cmd dhcp; " \
++		"else " \
++			"setenv get_cmd tftp; " \
++		"fi; " \
++		"${get_cmd} ${image}; " \
++		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
++			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
++				"bootz ${loadaddr} - ${fdt_addr}; " \
++			"else " \
++				"if test ${boot_fdt} = try; then " \
++					"bootz; " \
++				"else " \
++					"echo WARN: Cannot load the DT; " \
++				"fi; " \
++			"fi; " \
++		"else " \
++			"bootz; " \
++		"fi;\0" \
++		"findfdt="\
++			"if test $fdt_file = undefined; then " \
++				"if test $board_name = SABREAUTO && test $board_rev = MX6QP; then " \
++					"setenv fdt_file imx6qp-sabreauto.dtb; fi; " \
++				"if test $board_name = SABREAUTO && test $board_rev = MX6Q; then " \
++					"setenv fdt_file imx6q-sabreauto.dtb; fi; " \
++				"if test $board_name = SABREAUTO && test $board_rev = MX6DL; then " \
++					"setenv fdt_file imx6dl-sabreauto.dtb; fi; " \
++				"if test $board_name = SABRESD && test $board_rev = MX6QP; then " \
++					"setenv fdt_file imx6qp-sabresd.dtb; fi; " \
++				"if test $board_name = SABRESD && test $board_rev = MX6Q; then " \
++					"setenv fdt_file imx6q-sabresd-ldo.dtb; fi; " \
++				"if test $board_name = SABRESD && test $board_rev = MX6DL; then " \
++					"setenv fdt_file imx6dl-sabresd-ldo.dtb; fi; " \
++				"if test $fdt_file = undefined; then " \
++					"echo WARNING: Could not determine dtb to use; fi; " \
++			"fi;\0" \
++    UPDATEHUB_ENV
++
+ #define CONFIG_ARP_TIMEOUT     200UL
+ 
+ #define CONFIG_SYS_MEMTEST_START       0x10000000
+-- 
+2.19.1
+

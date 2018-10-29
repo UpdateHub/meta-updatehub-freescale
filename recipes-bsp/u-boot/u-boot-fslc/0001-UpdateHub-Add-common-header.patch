@@ -1,22 +1,25 @@
-From f2056ea1343ab38387c7256f60175b86d548e20c Mon Sep 17 00:00:00 2001
+From 32bfc7eecc3cccc0b9067fa5d379dd96e3a548f9 Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Wed, 14 Jun 2017 12:21:16 -0300
 Subject: [PATCH 1/5] UpdateHub: Add common header
 Organization: O.S. Systems Software LTDA.
 
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+This add the updatehub-common.h which provides the default environment
+script used by UpdateHub making it easy to add support for multiple
+boards.
 
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
- include/configs/updatehub-common.h | 70 ++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ include/configs/updatehub-common.h | 72 ++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
  create mode 100644 include/configs/updatehub-common.h
 
 diff --git a/include/configs/updatehub-common.h b/include/configs/updatehub-common.h
 new file mode 100644
-index 0000000000..21c7896fec
+index 0000000000..b58076f223
 --- /dev/null
 +++ b/include/configs/updatehub-common.h
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,72 @@
 +/*
 + * Copyright (C) 2017 O.S. Systems Software LTDA.
 + *
@@ -32,7 +35,9 @@ index 0000000000..21c7896fec
 +#ifndef __UPDATEHUB_H
 +#define __UPDATEHUB_H
 +
-+#define CONFIG_BOOTCOUNT_LIMIT
++#ifndef CONFIG_BOOTCOUNT_LIMIT
++# error Boot count limit is required for UpdateHub use
++#endif
 +
 +#ifdef CONFIG_ENV_IS_NOWHERE
 +# error Environment saving is required for UpdateHub use
@@ -87,3 +92,6 @@ index 0000000000..21c7896fec
 +    UPDATEHUB_BOOTCMD
 +
 +#endif  /* __UPDATEHUB_H */
+-- 
+2.19.1
+

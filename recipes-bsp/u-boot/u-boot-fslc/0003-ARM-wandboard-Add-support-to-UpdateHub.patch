@@ -1,38 +1,40 @@
-From 7ffe81889d7117901d30b133bc3f127f601273f7 Mon Sep 17 00:00:00 2001
+From ead8b1165de5854edf46ade071eb3919bf15104f Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Mon, 7 Aug 2017 10:30:34 -0300
-Subject: [PATCH 3/5] wandboard: Add support to UpdateHub
+Subject: [PATCH 3/5] ARM: wandboard: Add support to UpdateHub
 Organization: O.S. Systems Software LTDA.
 
 Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
-
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
- configs/wandboard_defconfig |  2 +
- include/configs/wandboard.h | 78 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
+ configs/wandboard_defconfig |  3 ++
+ include/configs/wandboard.h | 74 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
 diff --git a/configs/wandboard_defconfig b/configs/wandboard_defconfig
-index 03335298eb..5273340ae2 100644
+index 4d8ccff675..527558d4d2 100644
 --- a/configs/wandboard_defconfig
 +++ b/configs/wandboard_defconfig
-@@ -42,3 +42,5 @@ CONFIG_USB_STORAGE=y
- CONFIG_VIDEO=y
- # CONFIG_VIDEO_SW_CURSOR is not set
- CONFIG_OF_LIBFDT=y
-+CONFIG_CMD_PART=y
-+CONFIG_PARTITION_UUIDS=y
+@@ -35,6 +35,9 @@ CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
+ CONFIG_DM=y
+ CONFIG_DWC_AHSATA=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
++CONFIG_BOOTCOUNT_BOOTLIMIT=1
+ CONFIG_FSL_ESDHC=y
+ CONFIG_PHYLIB=y
+ CONFIG_MII=y
 diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
-index cb32cd11f9..82c238531d 100644
+index b03a1c550c..33e5d91cd4 100644
 --- a/include/configs/wandboard.h
 +++ b/include/configs/wandboard.h
-@@ -135,6 +135,84 @@
- 	func(DHCP, dhcp, na)
+@@ -135,6 +135,80 @@
  
  #include <config_distro_bootcmd.h>
-+#undef CONFIG_BOOTCOMMAND
-+
+ 
 +/*
 + * UpdateHub configuration
 + */
@@ -59,38 +61,30 @@ index cb32cd11f9..82c238531d 100644
 +
 +#undef CONFIG_EXTRA_ENV_SETTINGS
 +#define CONFIG_EXTRA_ENV_SETTINGS \
-+	"image=zImage\0" \
 +	"console=ttymxc0\0" \
++	"splashpos=m,m\0" \
 +	"fdtfile=undefined\0" \
 +	"fdt_high=0xffffffff\0" \
 +	"initrd_high=0xffffffff\0" \
++	"fdt_addr_r=0x18000000\0" \
 +	"fdt_addr=0x18000000\0" \
-+	"videoargs=" \
-+		"setenv nextcon 0; " \
-+		"if hdmidet; then " \
-+			"setenv video_args " \
-+				"video=mxcfb${nextcon}:dev=hdmi,1280x720M@60," \
-+					"if=RGB24; " \
-+			"setenv fbmen fbmem=28M; " \
-+			"setexpr nextcon ${nextcon} + 1; " \
++	"ip_dyn=yes\0" \
++	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
++	"finduuid=part uuid mmc 0:1 uuid\0" \
++	"update_sd_firmware_filename=u-boot.imx\0" \
++	"update_sd_firmware=" \
++		"if test ${ip_dyn} = yes; then " \
++			"setenv get_cmd dhcp; " \
 +		"else " \
-+			"echo - no HDMI monitor;" \
++			"setenv get_cmd tftp; " \
 +		"fi; " \
-+		"i2c dev 1; " \
-+		"if i2c probe 0x10; then " \
-+			"setenv video_args " \
-+				"video=mxcfb${nextcon}:dev=lcd,800x480@60," \
-+					"if=RGB666,bpp=32; " \
-+			"if test 0 -eq ${nextcon}; then " \
-+				"setenv fbmem fbmem=10M; " \
-+			"else " \
-+				"setenv fbmem ${fbmem},10M; " \
-+			"fi; " \
-+			"setexpr nextcon ${nextcon} + 1; " \
-+		"else " \
-+			"echo '- no FWBADAPT-7WVGA-LCD-F07A-0102 display';" \
-+		"fi; " \
-+		"setenv video_args ${video_args} ${fbmem}\0" \
++		"if mmc dev ${mmcdev}; then "	\
++			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
++				"setexpr fw_sz ${filesize} / 0x200; " \
++				"setexpr fw_sz ${fw_sz} + 1; "	\
++				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
++			"fi; "	\
++		"fi\0" \
 +	"findfdt="\
 +		"if test $board_name = D1 && test $board_rev = MX6QP ; then " \
 +			"setenv fdtfile imx6qp-wandboard-revd1.dtb; fi; " \
@@ -108,7 +102,16 @@ index cb32cd11f9..82c238531d 100644
 +			"setenv fdtfile imx6dl-wandboard-revb1.dtb; fi; " \
 +		"if test $fdtfile = undefined; then " \
 +			"echo WARNING: Could not determine dtb to use; fi; \0" \
++	"kernel_addr_r=" __stringify(CONFIG_LOADADDR) "\0" \
++	"pxefile_addr_r=" __stringify(CONFIG_LOADADDR) "\0" \
++	"ramdisk_addr_r=0x13000000\0" \
++	"ramdiskaddr=0x13000000\0" \
++	"scriptaddr=" __stringify(CONFIG_LOADADDR) "\0" \
 +    UPDATEHUB_ENV
- 
++
  /* Physical Memory Map */
- #define CONFIG_NR_DRAM_BANKS		1
+ #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
+ 
+-- 
+2.19.1
+
