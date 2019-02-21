@@ -12,7 +12,7 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 79 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 15a66739f8..174fcfbdf3 100644
+index 955c7af42a..34a60af6d6 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
 @@ -29,6 +29,9 @@ CONFIG_CMD_EXT4_WRITE=y
@@ -24,12 +24,12 @@ index 15a66739f8..174fcfbdf3 100644
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
  CONFIG_DFU_MMC=y
  CONFIG_FSL_ESDHC=y
- CONFIG_USB=y
+ CONFIG_OPTEE=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 1b656a5aaf..846cee8c92 100644
+index a391dfb5c1..c5e8f7e8e4 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -96,6 +96,82 @@
+@@ -107,6 +107,82 @@
  		   "fi; " \
  	   "fi"
  
