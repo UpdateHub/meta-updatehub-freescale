@@ -37,6 +37,7 @@ index a391dfb5c1..c5e8f7e8e4 100644
 + * UpdateHub configuration
 + */
 +
++#undef CONFIG_BOOTCOMMAND
 +
 +/* Environment */
 +#define UPDATEHUB_LOAD_OS_A     "load mmc 0:1 ${loadaddr} /boot/${image}; " \
@@ -53,7 +54,6 @@ index a391dfb5c1..c5e8f7e8e4 100644
 +
 +#include <configs/updatehub-common.h>
 +
-+#undef CONFIG_BOOTCOMMAND
 +#undef CONFIG_EXTRA_ENV_SETTINGS
 +#define CONFIG_EXTRA_ENV_SETTINGS \
 +	CONFIG_DFU_ENV_SETTINGS \
