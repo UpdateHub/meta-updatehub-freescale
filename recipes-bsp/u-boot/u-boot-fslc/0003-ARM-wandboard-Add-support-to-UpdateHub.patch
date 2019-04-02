@@ -1,23 +1,24 @@
-From ead8b1165de5854edf46ade071eb3919bf15104f Mon Sep 17 00:00:00 2001
+From d43cf7e078ce862f5d58916d38bead35f2941745 Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Mon, 7 Aug 2017 10:30:34 -0300
-Subject: [PATCH 3/5] ARM: wandboard: Add support to UpdateHub
+Subject: [PATCH] ARM: wandboard: Add support to UpdateHub
 Organization: O.S. Systems Software LTDA.
 
 Set all variables needed to use UpdateHub tool.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
 ---
  configs/wandboard_defconfig |  3 ++
  include/configs/wandboard.h | 74 +++++++++++++++++++++++++++++++++++++
  2 files changed, 77 insertions(+)
 
 diff --git a/configs/wandboard_defconfig b/configs/wandboard_defconfig
-index 4d8ccff675..527558d4d2 100644
+index 5725487446..258ed72bc8 100644
 --- a/configs/wandboard_defconfig
 +++ b/configs/wandboard_defconfig
-@@ -35,6 +35,9 @@ CONFIG_ENV_IS_IN_MMC=y
+@@ -36,6 +36,9 @@ CONFIG_ENV_IS_IN_MMC=y
  CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
  CONFIG_DM=y
  CONFIG_DWC_AHSATA=y
@@ -112,6 +113,3 @@ index b03a1c550c..33e5d91cd4 100644
  /* Physical Memory Map */
  #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
  
--- 
-2.19.1
-

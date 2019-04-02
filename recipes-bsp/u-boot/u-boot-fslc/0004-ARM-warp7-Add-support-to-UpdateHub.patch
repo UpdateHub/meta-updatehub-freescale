@@ -1,32 +1,33 @@
-From dfcf2a87be8cf3dd85f9155b150dc3204d6f80ae Mon Sep 17 00:00:00 2001
+From 0ac24138023eb520449441c21ee46dc3930bbd74 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Date: Tue, 20 Mar 2018 22:56:09 +0100
-Subject: [PATCH 4/5] ARM: warp7: Add support to UpdateHub
+Subject: [PATCH] ARM: warp7: Add support to UpdateHub
 Organization: O.S. Systems Software LTDA.
 
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
 ---
  configs/warp7_defconfig |  3 ++
  include/configs/warp7.h | 76 +++++++++++++++++++++++++++++++++++++++++
  2 files changed, 79 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 955c7af42a..34a60af6d6 100644
+index 28aa06fa59..cb79f6ba56 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -29,6 +29,9 @@ CONFIG_CMD_EXT4_WRITE=y
- CONFIG_CMD_FAT=y
- CONFIG_CMD_FS_GENERIC=y
+@@ -34,6 +34,9 @@ CONFIG_CMD_FS_GENERIC=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
  CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
  CONFIG_DFU_MMC=y
- CONFIG_FSL_ESDHC=y
- CONFIG_OPTEE=y
+ CONFIG_DM_GPIO=y
+ CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index a391dfb5c1..c5e8f7e8e4 100644
+index 043f2861b6..e8699c640c 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
 @@ -107,6 +107,82 @@
@@ -112,6 +113,3 @@ index a391dfb5c1..c5e8f7e8e4 100644
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
  
--- 
-2.19.1
-

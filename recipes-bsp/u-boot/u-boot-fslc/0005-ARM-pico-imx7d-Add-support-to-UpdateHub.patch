@@ -1,11 +1,12 @@
-From b73cc09803f95c744d03725a1cab05261d4a135f Mon Sep 17 00:00:00 2001
+From b4063babcd9afe5051b1a64ed8583cd63d29b40c Mon Sep 17 00:00:00 2001
 From: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Date: Tue, 3 Apr 2018 18:15:36 +0200
-Subject: [PATCH 5/5] ARM: pico-imx7d: Add support to UpdateHub
+Subject: [PATCH] ARM: pico-imx7d: Add support to UpdateHub
 Organization: O.S. Systems Software LTDA.
 
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+
 ---
  configs/pico-hobbit-imx7d_defconfig |  3 ++
  configs/pico-imx7d_defconfig        |  3 ++
@@ -14,10 +15,10 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  4 files changed, 55 insertions(+)
 
 diff --git a/configs/pico-hobbit-imx7d_defconfig b/configs/pico-hobbit-imx7d_defconfig
-index b02cae5237..000d59d56a 100644
+index f58d5171ba..dff2686705 100644
 --- a/configs/pico-hobbit-imx7d_defconfig
 +++ b/configs/pico-hobbit-imx7d_defconfig
-@@ -38,6 +38,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+@@ -39,6 +39,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
  # CONFIG_CMD_MII is not set
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
@@ -28,10 +29,10 @@ index b02cae5237..000d59d56a 100644
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/configs/pico-imx7d_defconfig b/configs/pico-imx7d_defconfig
-index f355f07be7..d78fe4cac0 100644
+index 7e13923cb4..61aab4fa89 100644
 --- a/configs/pico-imx7d_defconfig
 +++ b/configs/pico-imx7d_defconfig
-@@ -38,6 +38,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+@@ -39,6 +39,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
  # CONFIG_CMD_MII is not set
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
@@ -42,10 +43,10 @@ index f355f07be7..d78fe4cac0 100644
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
-index 3a182dcb81..3128dc0795 100644
+index c8ac2ffd5f..f5c75fcd71 100644
 --- a/configs/pico-pi-imx7d_defconfig
 +++ b/configs/pico-pi-imx7d_defconfig
-@@ -38,6 +38,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+@@ -39,6 +39,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
  # CONFIG_CMD_MII is not set
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
@@ -56,10 +57,10 @@ index 3a182dcb81..3128dc0795 100644
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
-index 2bc42a04a0..97a2e75103 100644
+index 0f6d6b7894..9a0bc90a0f 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
-@@ -98,6 +98,52 @@
+@@ -100,6 +100,52 @@
  
  #include <config_distro_bootcmd.h>
  
@@ -112,6 +113,3 @@ index 2bc42a04a0..97a2e75103 100644
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
  
--- 
-2.19.1
-
