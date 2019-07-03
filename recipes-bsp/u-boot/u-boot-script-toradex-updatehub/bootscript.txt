@@ -21,7 +21,7 @@ if itest.s "${updatehub_active}" == 0 ; then
     run updatehub_find_root_a updatehub_load_os_a
 
     run setup; setenv bootargs ${defargs} ip=off root=PARTUUID=${uuid} rw rootfstype=ext4 rootwait ${setupargs} ${vidargs}
-    bootm ${kernel_addr_r} ${dtbparam}
+    bootz ${kernel_addr_r} ${dtbparam}
 
 else
     if itest.s "${updatehub_active}" == 1 ; then
@@ -29,7 +29,7 @@ else
         run updatehub_find_root_b updatehub_load_os_b
 
         run setup; setenv bootargs ${defargs} ip=off root=PARTUUID=${uuid} rw rootfstype=ext4 rootwait ${setupargs} ${vidargs}
-        bootm ${kernel_addr_r} ${dtbparam}
+        bootz ${kernel_addr_r} ${dtbparam}
 
     else
         echo Invalid updatehub_active value, resetting it
