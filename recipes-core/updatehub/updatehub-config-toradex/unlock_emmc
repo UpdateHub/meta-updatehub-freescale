@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$1" = "enter" ] && [ "$2" = "installing" ]; then
+    echo 0 > /sys/block/mmcblk0boot0/force_ro
+fi
+
+if [ "$1" = "enter" ] && [ "$2" = "rebooting" ]; then
+    echo 1 > /sys/block/mmcblk0boot0/force_ro
+fi
