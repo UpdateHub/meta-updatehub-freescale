@@ -1,4 +1,4 @@
-From 0ac24138023eb520449441c21ee46dc3930bbd74 Mon Sep 17 00:00:00 2001
+From 5f968f68287df5564e0331b3007688b229be3065 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Date: Tue, 20 Mar 2018 22:56:09 +0100
 Subject: [PATCH] ARM: warp7: Add support to UpdateHub
@@ -13,7 +13,7 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 79 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 28aa06fa59..cb79f6ba56 100644
+index 5b351133a8..4e4808b6ca 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
 @@ -34,6 +34,9 @@ CONFIG_CMD_FS_GENERIC=y
@@ -27,10 +27,10 @@ index 28aa06fa59..cb79f6ba56 100644
  CONFIG_DM_GPIO=y
  CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 043f2861b6..e8699c640c 100644
+index 8ceaa0c6c6..a2b2f8b19e 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -107,6 +107,82 @@
+@@ -93,6 +93,82 @@
  		   "fi; " \
  	   "fi"
  
