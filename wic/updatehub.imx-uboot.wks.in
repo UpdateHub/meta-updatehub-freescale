@@ -1,4 +1,4 @@
-part u-boot --source rawcopy --sourceparams="file=u-boot.imx" --ondisk mmcblk --no-table --align 1
+part u-boot --source rawcopy --sourceparams="file=${UBOOT_BINARY}" --ondisk mmcblk --no-table --align 1
 part / --source rootfs --ondisk mmcblk --fstype=ext4 --label system_a  --align 8192 --extra-space 200
 part / --source rootfs --ondisk mmcblk --fstype=ext4 --label system_b  --align 8192 --extra-space 200
 part /data --ondisk mmcblk --fstype=ext4 --label data --size 16M --align 8192 --extra-space 0
