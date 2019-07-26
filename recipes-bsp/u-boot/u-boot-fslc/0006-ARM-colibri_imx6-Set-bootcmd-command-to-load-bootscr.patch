@@ -1,0 +1,31 @@
+From 81c3e9929a9a23fd1f5d919116abc93ee15c5df4 Mon Sep 17 00:00:00 2001
+From: Fabio Berton <fabio.berton@ossystems.com.br>
+Date: Fri, 26 Jul 2019 11:11:18 -0300
+Subject: [PATCH 6/6] ARM: colibri_imx6: Set bootcmd command to load bootscript
+ as default
+Organization: O.S. Systems Software LTDA.
+
+Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+---
+ include/configs/colibri_imx6.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/include/configs/colibri_imx6.h b/include/configs/colibri_imx6.h
+index 86f3f0d4fa..dba6a3d611 100644
+--- a/include/configs/colibri_imx6.h
++++ b/include/configs/colibri_imx6.h
+@@ -187,10 +187,7 @@
+ #define FDT_FILE "imx6dl-colibri-eval-v3.dtb"
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	BOOTENV \
+-	"bootcmd=run emmcboot ; echo ; echo emmcboot failed ; " \
+-		"setenv fdtfile ${fdt_file}; run distro_bootcmd ; " \
+-		"usb start ; " \
+-		"setenv stdout serial,vga ; setenv stdin serial,usbkbd\0" \
++	"bootcmd=load mmc 0:1 ${scriptaddr} boot.scr && source ${scriptaddr}\0" \
+ 	"boot_file=zImage\0" \
+ 	"console=ttymxc0\0" \
+ 	"defargs=enable_wait_mode=off galcore.contiguousSize=50331648\0" \
+-- 
+2.22.0
+
