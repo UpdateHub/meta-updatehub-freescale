@@ -1,4 +1,4 @@
-From c1d89dbb5d0385bd6d44bd0033fe7383465f8bc2 Mon Sep 17 00:00:00 2001
+From 6eb403eb3a7a7ba073c3ce1024878c5a38e0210e Mon Sep 17 00:00:00 2001
 From: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Date: Tue, 3 Apr 2018 18:15:36 +0200
 Subject: [PATCH] ARM: pico-imx7d: Add support to UpdateHub
@@ -7,24 +7,23 @@ Organization: O.S. Systems Software LTDA.
 Signed-off-by: Pierre-Jean TEXIER <texier.pj2@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
-
 ---
  configs/pico-dwarf-imx7d_defconfig  |  3 ++
- configs/pico-hobbit-imx7d_defconfig |  3 ++
+ configs/pico-hobbit-imx7d_defconfig |  4 +++
  configs/pico-imx7d_defconfig        |  3 ++
  configs/pico-nymph-imx7d_defconfig  |  3 ++
  configs/pico-pi-imx7d_defconfig     |  3 ++
  include/configs/pico-imx7d.h        | 46 +++++++++++++++++++++++++++++
- 6 files changed, 61 insertions(+)
+ 6 files changed, 62 insertions(+)
 
 diff --git a/configs/pico-dwarf-imx7d_defconfig b/configs/pico-dwarf-imx7d_defconfig
-index de7db3790c..2faaa006e4 100644
+index b8a5fb60ad..8fcded96bc 100644
 --- a/configs/pico-dwarf-imx7d_defconfig
 +++ b/configs/pico-dwarf-imx7d_defconfig
-@@ -39,6 +39,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_MII is not set
- CONFIG_CMD_CACHE=y
+@@ -42,6 +42,9 @@ CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-pi"
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
@@ -32,13 +31,14 @@ index de7db3790c..2faaa006e4 100644
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/configs/pico-hobbit-imx7d_defconfig b/configs/pico-hobbit-imx7d_defconfig
-index 9545d6bbd6..97ac58b3bf 100644
+index 8706b628d2..ecb0e3bbaa 100644
 --- a/configs/pico-hobbit-imx7d_defconfig
 +++ b/configs/pico-hobbit-imx7d_defconfig
-@@ -42,6 +42,9 @@ CONFIG_CMD_CACHE=y
+@@ -42,6 +42,10 @@ CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
  CONFIG_OF_CONTROL=y
- CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-hobbit"
+ CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-pi"
++CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-hobbit"
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
@@ -60,13 +60,13 @@ index 92ab9c5a50..c12a20a37f 100644
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/configs/pico-nymph-imx7d_defconfig b/configs/pico-nymph-imx7d_defconfig
-index de7db3790c..2faaa006e4 100644
+index b8a5fb60ad..8fcded96bc 100644
 --- a/configs/pico-nymph-imx7d_defconfig
 +++ b/configs/pico-nymph-imx7d_defconfig
-@@ -39,6 +39,9 @@ CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_MII is not set
- CONFIG_CMD_CACHE=y
+@@ -42,6 +42,9 @@ CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-pi"
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
@@ -92,9 +92,9 @@ index 1f4023796a..a1d37f022e 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
 @@ -144,6 +144,52 @@
- 
+
  #include <config_distro_bootcmd.h>
- 
+
 +/*
 + * UpdateHub configuration
 + */
@@ -143,4 +143,6 @@ index 1f4023796a..a1d37f022e 100644
 +
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
- 
+
+--
+2.23.0
