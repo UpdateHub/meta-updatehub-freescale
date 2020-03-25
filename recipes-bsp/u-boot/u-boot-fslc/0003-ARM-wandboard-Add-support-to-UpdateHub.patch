@@ -15,24 +15,24 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 77 insertions(+)
 
 diff --git a/configs/wandboard_defconfig b/configs/wandboard_defconfig
-index f1d6cc56b0..016bcf35f8 100644
+index ca564c59b8..f77d6e8ede 100644
 --- a/configs/wandboard_defconfig
 +++ b/configs/wandboard_defconfig
-@@ -54,6 +54,9 @@ CONFIG_SYS_I2C_MXC_I2C1=y
- CONFIG_SYS_I2C_MXC_I2C2=y
+@@ -58,6 +58,9 @@ CONFIG_SYS_I2C_MXC_I2C2=y
  CONFIG_SYS_I2C_MXC_I2C3=y
  CONFIG_DM_MMC=y
+ CONFIG_FSL_USDHC=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
- CONFIG_FSL_ESDHC=y
  CONFIG_PHYLIB=y
- CONFIG_MII=y
+ CONFIG_PHY_ATHEROS=y
+ CONFIG_DM_ETH=y
 diff --git a/include/configs/wandboard.h b/include/configs/wandboard.h
-index bdcd5e9db3..ba8bb0cf01 100644
+index a65d23bbe8..065a83a4d1 100644
 --- a/include/configs/wandboard.h
 +++ b/include/configs/wandboard.h
-@@ -118,6 +118,80 @@
+@@ -111,6 +111,80 @@
  
  #include <config_distro_bootcmd.h>
  

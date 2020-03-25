@@ -7,19 +7,18 @@ Organization: O.S. Systems Software LTDA.
 
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
- include/configs/colibri_imx6.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/configs/colibri_imx6.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/include/configs/colibri_imx6.h b/include/configs/colibri_imx6.h
-index 86f3f0d4fa..dba6a3d611 100644
+index 95b5a14b59..7b16c70f18 100644
 --- a/include/configs/colibri_imx6.h
 +++ b/include/configs/colibri_imx6.h
-@@ -187,10 +187,7 @@
+@@ -151,9 +151,7 @@
  #define FDT_FILE "imx6dl-colibri-eval-v3.dtb"
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	BOOTENV \
--	"bootcmd=run emmcboot ; echo ; echo emmcboot failed ; " \
--		"setenv fdtfile ${fdt_file}; run distro_bootcmd ; " \
+-	"bootcmd=setenv fdtfile ${fdt_file}; run distro_bootcmd; " \
 -		"usb start ; " \
 -		"setenv stdout serial,vga ; setenv stdin serial,usbkbd\0" \
 +	"bootcmd=load mmc 0:1 ${scriptaddr} boot.scr && source ${scriptaddr}\0" \

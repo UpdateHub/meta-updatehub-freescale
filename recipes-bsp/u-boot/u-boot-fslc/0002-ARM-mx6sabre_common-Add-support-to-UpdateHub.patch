@@ -15,12 +15,12 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 140 insertions(+)
 
 diff --git a/configs/mx6sabresd_defconfig b/configs/mx6sabresd_defconfig
-index d5ec964d0f..651c2d76a4 100644
+index 4ba2cb6c72..5bdee0f744 100644
 --- a/configs/mx6sabresd_defconfig
 +++ b/configs/mx6sabresd_defconfig
-@@ -67,6 +67,9 @@ CONFIG_SPL_OF_LIST="imx6dl-sabresd imx6q-sabresd imx6qp-sabresd"
- CONFIG_SPL_MULTI_DTB_FIT_NO_COMPRESSION=y
+@@ -67,6 +67,9 @@ CONFIG_SPL_MULTI_DTB_FIT_NO_COMPRESSION=y
  CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
  CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
@@ -29,10 +29,10 @@ index d5ec964d0f..651c2d76a4 100644
  CONFIG_FASTBOOT_BUF_ADDR=0x12000000
  CONFIG_FASTBOOT_BUF_SIZE=0x10000000
 diff --git a/include/configs/mx6sabre_common.h b/include/configs/mx6sabre_common.h
-index 7a279583e4..b5a637ccf3 100644
+index a17767e05a..e813e7369e 100644
 --- a/include/configs/mx6sabre_common.h
 +++ b/include/configs/mx6sabre_common.h
-@@ -183,6 +183,143 @@
+@@ -184,6 +184,143 @@
  		"fi; " \
  	"else run netboot; fi"
  

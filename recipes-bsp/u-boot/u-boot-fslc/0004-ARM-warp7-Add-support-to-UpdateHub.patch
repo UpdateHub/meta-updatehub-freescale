@@ -13,12 +13,12 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 79 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 5b351133a8..4e4808b6ca 100644
+index d31ca28fff..7a6a61571a 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -34,6 +34,9 @@ CONFIG_CMD_FS_GENERIC=y
- CONFIG_OF_CONTROL=y
+@@ -37,6 +37,9 @@ CONFIG_OF_CONTROL=y
  CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
  CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
@@ -27,10 +27,10 @@ index 5b351133a8..4e4808b6ca 100644
  CONFIG_DM_GPIO=y
  CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 8ceaa0c6c6..a2b2f8b19e 100644
+index da894ec0ca..245668c0e9 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -93,6 +93,82 @@
+@@ -107,6 +107,82 @@
  		   "fi; " \
  	   "fi"
  
