@@ -35,4 +35,4 @@ FILES_${PN} += "/"
 PROVIDES += "u-boot-script"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(apalis-imx6|colibri-imx6)"
+COMPATIBLE_MACHINE = "(apalis-imx6|colibri-imx6|colibri-imx7-emmc)"
