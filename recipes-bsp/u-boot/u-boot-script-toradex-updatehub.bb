@@ -32,5 +32,7 @@ addtask deploy after do_install before do_build
 
 FILES_${PN} += "/"
 
+PROVIDES += "u-boot-script"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(apalis-imx6|colibri-imx6)"
