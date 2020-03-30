@@ -11,21 +11,21 @@ do_compile[noexec] = "1"
 
 do_mkimage () {
     uboot-mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-                  -n "boot script" -d ${WORKDIR}/bootscript.txt \
-                  ${B}/bootscript
+                  -n "boot script" -d ${WORKDIR}/boot.scr.txt \
+                  ${B}/boot.scr
 }
 
 addtask mkimage after do_compile before do_install
 
 do_install () {
-    install -Dm 0644 ${B}/bootscript ${D}/bootscript
+    install -Dm 0644 ${B}/boot.scr ${D}/boot.scr
 }
 
 do_deploy () {
-    install -Dm 0644 ${B}/bootscript ${DEPLOYDIR}/bootscript-${MACHINE}-${PV}-${PR}
+    install -Dm 0644 ${D}/boot.scr ${DEPLOYDIR}/boot.scr-${MACHINE}-${PV}-${PR}
     cd ${DEPLOYDIR}
-    rm -f bootscript-${MACHINE}
-    ln -sf bootscript-${MACHINE}-${PV}-${PR} bootscript-${MACHINE}
+    rm -f boot.scr-${MACHINE}
+    ln -sf boot.scr-${MACHINE}-${PV}-${PR} boot.scr-${MACHINE}
 }
 
 addtask deploy after do_install before do_build
