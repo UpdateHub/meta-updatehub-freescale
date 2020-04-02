@@ -7,6 +7,7 @@ UPDATEHUB_IMX_PATCHES = " \
     file://0004-ARM-warp7-Add-support-to-UpdateHub.patch \
     file://0005-ARM-pico-imx7d-Add-support-to-UpdateHub.patch \
     file://0006-ARM-colibri_imx6-Set-bootcmd-command-to-load-bootscr.patch \
+    file://fw_env.config \
 "
 
 SRC_URI_append_updatehub-imx = " ${UPDATEHUB_IMX_PATCHES}"
