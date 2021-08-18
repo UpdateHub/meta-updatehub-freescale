@@ -1,3 +1,3 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-dirs755_append_updatehub-imx = " /data"
+dirs755:append:updatehub-imx = " /data"

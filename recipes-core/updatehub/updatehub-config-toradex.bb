@@ -12,7 +12,7 @@ do_install() {
     install -Dm 0755 ${WORKDIR}/unlock_emmc ${D}${datadir}/updatehub/state-change-callbacks.d/unlock_emmc
 }
 
-FILES_${PN} += "${datadir}/updatehub/state-change-callbacks.d/unlock_emmc"
+FILES:${PN} += "${datadir}/updatehub/state-change-callbacks.d/unlock_emmc"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(apalis-imx6|colibri-imx6|colibri-imx7-emmc)"
