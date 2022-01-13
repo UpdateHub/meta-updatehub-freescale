@@ -11,7 +11,7 @@ do_compile[noexec] = "1"
 
 do_mkimage () {
     uboot-mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-                  -n "boot script" -d ${WORKDIR}/boot.scr.txt \
+                  -n "boot script" -d ${WORKDIR}/bootscript.txt \
                   ${B}/boot.scr
 }
 
@@ -32,7 +32,8 @@ addtask deploy after do_install before do_build
 
 FILES_${PN} += "/"
 
-PROVIDES += "u-boot-script"
+PROVIDES += "u-boot-default-script"
+RPROVIDES_${PN} += "u-boot-default-script"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(apalis-imx6|colibri-imx6|colibri-imx7-emmc)"
