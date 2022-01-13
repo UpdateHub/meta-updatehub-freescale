@@ -11,7 +11,7 @@ do_compile[noexec] = "1"
 
 do_mkimage () {
     uboot-mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-                  -n "boot script" -d ${WORKDIR}/boot.scr.txt \
+                  -n "boot script" -d ${WORKDIR}/bootscript.txt \
                   ${B}/boot.scr
 }
 
